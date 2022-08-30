@@ -23,6 +23,7 @@ enum Source {
   IS_INSTALLED_FROM_OTHER_SOURCE,
   IS_INSTALLED_FROM_APP_STORE,
   IS_INSTALLED_FROM_TEST_FLIGHT,
+  IS_INSTALLED_FROM_APK_PURE,
   UNKNOWN
 }
 
@@ -60,6 +61,9 @@ class StoreChecker {
       } else if (sourceName.compareTo('com.vivo.appstore') == 0) {
         // Installed apk from Vivo App Store
         source = Source.IS_INSTALLED_FROM_VIVO_APP_STORE;
+      } else if (sourceName.compareTo('com.apkpure.aegon') == 0) {
+        // Installed apk from Pure APK
+        source = Source.IS_INSTALLED_FROM_APK_PURE;
       } else {
         // Installed apk from Amazon app store or other markets
         source = Source.IS_INSTALLED_FROM_OTHER_SOURCE;
