@@ -1,14 +1,9 @@
+import 'package:store_checker/app_source.dart';
+import 'package:flutter/services.dart';
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/services.dart';
-
-class AppSource {
-  final Source source;
-  final String name;
-
-  const AppSource({required this.source, required this.name});
-}
+export 'app_source.dart';
 
 /* Source is where apk/ipa is available to Download */
 enum Source {
@@ -34,7 +29,7 @@ class StoreChecker {
   /* Get origin of installed apk/ipa */
   static Future<AppSource> get getSource async {
     final String? sourceName = await _channel.invokeMethod('getSource');
-    late final Source source;
+    Source source = Source.UNKNOWN; // Installed from Unknown source
 
     if (Platform.isAndroid) {
       if (sourceName == null) {
@@ -83,8 +78,6 @@ class StoreChecker {
         source = Source.IS_INSTALLED_FROM_TEST_FLIGHT;
       }
     }
-    // Installed from Unknown source
-    source = Source.UNKNOWN;
 
     return AppSource(
       source: source,
