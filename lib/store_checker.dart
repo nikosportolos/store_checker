@@ -36,6 +36,9 @@ class StoreChecker {
     } else if (sourceName.compareTo('com.android.vending') == 0) {
       // Installed apk from Google Play Store
       source = Source.google_play_store;
+    } else if (sourceName.compareTo('com.google.android.packageinstaller') == 0) {
+      // Installed apk from Google Package Installer (Firebase App Distribution)
+      source = Source.google_package_installer;
     } else if (sourceName.compareTo('com.amazon.venezia') == 0) {
       // Installed apk from Amazon App Store
       source = Source.amazon_app_store;

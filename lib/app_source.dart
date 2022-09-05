@@ -16,6 +16,7 @@ class AppSource {
 /* Source is where apk/ipa is available to Download */
 enum Source {
   google_play_store,
+  google_package_installer,
   local_source,
   amazon_app_store,
   huawei_app_gallery,
