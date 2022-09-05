@@ -5,83 +5,84 @@ import 'dart:io';
 
 export 'app_source.dart';
 
-/* Source is where apk/ipa is available to Download */
-enum Source {
-  IS_INSTALLED_FROM_PLAY_STORE,
-  IS_INSTALLED_FROM_LOCAL_SOURCE,
-  IS_INSTALLED_FROM_AMAZON_APP_STORE,
-  IS_INSTALLED_FROM_HUAWEI_APP_GALLERY,
-  IS_INSTALLED_FROM_SAMSUNG_GALAXY_STORE,
-  IS_INSTALLED_FROM_OPPO_APP_MARKET,
-  IS_INSTALLED_FROM_XIAOMI_GET_APPS,
-  IS_INSTALLED_FROM_VIVO_APP_STORE,
-  IS_INSTALLED_FROM_OTHER_SOURCE,
-  IS_INSTALLED_FROM_APP_STORE,
-  IS_INSTALLED_FROM_TEST_FLIGHT,
-  IS_INSTALLED_FROM_APK_PURE,
-  UNKNOWN
-}
-
-/* Store Checker is useful to find the origin of installed apk/ipa */
+/// Store Checker is useful to find the origin of installed apk/ipa
 class StoreChecker {
   static const MethodChannel _channel = const MethodChannel('store_checker');
 
-  /* Get origin of installed apk/ipa */
+  /// Get origin of installed apk/ipa
   static Future<AppSource> get getSource async {
     final String? sourceName = await _channel.invokeMethod('getSource');
-    Source source = Source.UNKNOWN; // Installed from Unknown source
+    Source source = Source.unknown; // Installed from Unknown source
 
     if (Platform.isAndroid) {
-      if (sourceName == null) {
-        // Installed apk using adb commands or side loading or downloaded from any cloud service
-        source = Source.IS_INSTALLED_FROM_LOCAL_SOURCE;
-      } else if (sourceName.compareTo('com.android.vending') == 0) {
-        // Installed apk from Google Play Store
-        source = Source.IS_INSTALLED_FROM_PLAY_STORE;
-      } else if (sourceName.compareTo('com.amazon.venezia') == 0) {
-        // Installed apk from Amazon App Store
-        source = Source.IS_INSTALLED_FROM_AMAZON_APP_STORE;
-      } else if (sourceName.compareTo('com.huawei.appmarket') == 0) {
-        // Installed apk from Huawei App Store
-        source = Source.IS_INSTALLED_FROM_HUAWEI_APP_GALLERY;
-      } else if (sourceName.compareTo('com.sec.android.app.samsungapps') == 0) {
-        // Installed apk from Samsung App Store
-        source = Source.IS_INSTALLED_FROM_SAMSUNG_GALAXY_STORE;
-      } else if (sourceName.compareTo('com.oppo.market') == 0) {
-        // Installed apk from Oppo App Store
-        source = Source.IS_INSTALLED_FROM_OPPO_APP_MARKET;
-      } else if (sourceName.compareTo('com.xiaomi.mipicks') == 0) {
-        // Installed apk from Xiaomi App Store
-        source = Source.IS_INSTALLED_FROM_XIAOMI_GET_APPS;
-      } else if (sourceName.compareTo('com.vivo.appstore') == 0) {
-        // Installed apk from Vivo App Store
-        source = Source.IS_INSTALLED_FROM_VIVO_APP_STORE;
-      } else if (sourceName.compareTo('com.apkpure.aegon') == 0) {
-        // Installed apk from Pure APK
-        source = Source.IS_INSTALLED_FROM_APK_PURE;
-      } else {
-        // Installed apk from Amazon app store or other markets
-        source = Source.IS_INSTALLED_FROM_OTHER_SOURCE;
-      }
+      source = _getAndroidSource(sourceName);
     } else if (Platform.isIOS) {
-      if (sourceName == null) {
-        // Unknown source when null on iOS
-        source = Source.UNKNOWN;
-      } else if (sourceName.isEmpty) {
-        // Downloaded ipa using cloud service and installed
-        source = Source.IS_INSTALLED_FROM_LOCAL_SOURCE;
-      } else if (sourceName.compareTo('AppStore') == 0) {
-        // Installed ipa from App Store
-        source = Source.IS_INSTALLED_FROM_APP_STORE;
-      } else {
-        // Installed ipa from Test Flight
-        source = Source.IS_INSTALLED_FROM_TEST_FLIGHT;
-      }
+      source = _getAppleSource(sourceName);
     }
 
     return AppSource(
       source: source,
       name: sourceName ?? '',
     );
+  }
+
+  /// Get installation source for Android application
+  static Source _getAndroidSource(String? sourceName) {
+    late final Source source;
+
+    if (sourceName == null) {
+      // Installed apk using adb commands or side loading or downloaded from any cloud service
+      source = Source.local_source;
+    } else if (sourceName.compareTo('com.android.vending') == 0) {
+      // Installed apk from Google Play Store
+      source = Source.google_play_store;
+    } else if (sourceName.compareTo('com.amazon.venezia') == 0) {
+      // Installed apk from Amazon App Store
+      source = Source.amazon_app_store;
+    } else if (sourceName.compareTo('com.huawei.appmarket') == 0) {
+      // Installed apk from Huawei App Store
+      source = Source.huawei_app_gallery;
+    } else if (sourceName.compareTo('com.sec.android.app.samsungapps') == 0) {
+      // Installed apk from Samsung App Store
+      source = Source.samsung_galaxy_store;
+    } else if (sourceName.compareTo('com.oppo.market') == 0) {
+      // Installed apk from Oppo App Store
+      source = Source.oppo_app_market;
+    } else if (sourceName.compareTo('com.xiaomi.mipicks') == 0) {
+      // Installed apk from Xiaomi App Store
+      source = Source.xiaomi_get_apps;
+    } else if (sourceName.compareTo('com.vivo.appstore') == 0) {
+      // Installed apk from Vivo App Store
+      source = Source.vivo_app_store;
+    } else if (sourceName.compareTo('com.apkpure.aegon') == 0) {
+      // Installed apk from Pure APK
+      source = Source.apk_pure;
+    } else {
+      // Installed apk from other markets
+      source = Source.other_source;
+    }
+
+    return source;
+  }
+
+  /// Get installation source for iOS application
+  static Source _getAppleSource(String? sourceName) {
+    late final Source source;
+
+    if (sourceName == null) {
+      // Unknown source when null on iOS
+      source = Source.unknown;
+    } else if (sourceName.isEmpty) {
+      // Downloaded ipa using cloud service and installed
+      source = Source.local_source;
+    } else if (sourceName.compareTo('AppStore') == 0) {
+      // Installed ipa from App Store
+      source = Source.apple_app_store;
+    } else {
+      // Installed ipa from Test Flight
+      source = Source.apple_test_flight;
+    }
+
+    return source;
   }
 }

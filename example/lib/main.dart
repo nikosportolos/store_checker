@@ -28,9 +28,9 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       //get origin of installed application
-      installationSource = await StoreChecker.getSource;
+      installationSource = (await StoreChecker.getSource).source;
     } on PlatformException {
-      installationSource = Source.UNKNOWN;
+      installationSource = Source.unknown;
     }
 
     // If the widget was removed from the tree while the asynchronous platform
@@ -41,53 +41,56 @@ class _MyAppState extends State<MyApp> {
     // Set source text state
     setState(() {
       switch (installationSource) {
-        case Source.IS_INSTALLED_FROM_PLAY_STORE:
+        case Source.google_play_store:
           // Installed from Play Store
           source = "Play Store";
           break;
-        case Source.IS_INSTALLED_FROM_LOCAL_SOURCE:
+        case Source.local_source:
           // Installed using adb commands or side loading or any cloud service
           source = "Local Source";
           break;
-        case Source.IS_INSTALLED_FROM_AMAZON_APP_STORE:
+        case Source.amazon_app_store:
           // Installed from Amazon app store
           source = "Amazon Store";
           break;
-        case Source.IS_INSTALLED_FROM_HUAWEI_APP_GALLERY:
+        case Source.huawei_app_gallery:
           // Installed from Huawei app store
           source = "Huawei App Gallery";
           break;
-        case Source.IS_INSTALLED_FROM_SAMSUNG_GALAXY_STORE:
+        case Source.samsung_galaxy_store:
           // Installed from Samsung app store
           source = "Samsung Galaxy Store";
           break;
-        case Source.IS_INSTALLED_FROM_XIAOMI_GET_APPS:
+        case Source.xiaomi_get_apps:
           // Installed from Xiaomi app store
           source = "Xiaomi Get Apps";
           break;
-        case Source.IS_INSTALLED_FROM_OPPO_APP_MARKET:
+        case Source.oppo_app_market:
           // Installed from Oppo app store
           source = "Oppo App Market";
           break;
-        case Source.IS_INSTALLED_FROM_VIVO_APP_STORE:
+        case Source.vivo_app_store:
           // Installed from Vivo app store
           source = "Vivo App Store";
           break;
-        case Source.IS_INSTALLED_FROM_OTHER_SOURCE:
+        case Source.other_source:
           // Installed from other market store
           source = "Other Source";
           break;
-        case Source.IS_INSTALLED_FROM_APP_STORE:
+        case Source.apple_app_store:
           // Installed from iOS app store
           source = "App Store";
           break;
-        case Source.IS_INSTALLED_FROM_TEST_FLIGHT:
+        case Source.apple_test_flight:
           // Installed from Test Flight
           source = "Test Flight";
           break;
-        case Source.UNKNOWN:
+        case Source.unknown:
           // Installed from Unknown source
           source = "Unknown Source";
+          break;
+        case Source.apk_pure:
+          source = "APK Pure";
           break;
       }
     });
