@@ -27,5 +27,6 @@ enum Source {
   apple_app_store,
   apple_test_flight,
   apk_pure,
+  cafe_bazaar,
   unknown
 }

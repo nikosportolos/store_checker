@@ -57,6 +57,9 @@ class StoreChecker {
     } else if (sourceName.compareTo('com.apkpure.aegon') == 0) {
       // Installed apk from Pure APK
       source = Source.apk_pure;
+    } else if (sourceName.compareTo('com.farsitel.bazaar') == 0) {
+      // Installed apk from Cafe Bazaar
+      source = Source.cafe_bazaar;
     } else {
       // Installed apk from other markets
       source = Source.other_source;
